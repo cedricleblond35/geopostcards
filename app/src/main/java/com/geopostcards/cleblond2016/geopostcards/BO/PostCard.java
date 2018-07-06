@@ -6,7 +6,7 @@ import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
 
-@Entity(tableName = "users", foreignKeys = @ForeignKey(entity = User.class, parentColumns = "id", childColumns = "user"))
+@Entity(tableName = "postcards", foreignKeys = @ForeignKey(entity = User.class, parentColumns = "id", childColumns = "user"))
 public class PostCard {
 
     @PrimaryKey

@@ -1,14 +1,24 @@
 package com.geopostcards.cleblond2016.geopostcards.BO;
 
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.Ignore;
+import android.arch.persistence.room.PrimaryKey;
+import android.support.annotation.NonNull;
+
 import java.util.ArrayList;
 
+@Entity(tableName = "users")
 public class User {
 
+    @PrimaryKey
+    @NonNull
     private int id;
     private String useName;
     private String token_id;
     private String email;
     private String password;
+
+    @Ignore
     private ArrayList<PostCard> postCards;
 
     /**

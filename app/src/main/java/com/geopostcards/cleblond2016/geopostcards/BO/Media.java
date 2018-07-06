@@ -1,19 +1,29 @@
 package com.geopostcards.cleblond2016.geopostcards.BO;
 
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.ForeignKey;
+import android.arch.persistence.room.PrimaryKey;
+import android.support.annotation.NonNull;
+
+@Entity(tableName = "medias", foreignKeys = @ForeignKey(entity = PostCard.class, parentColumns = "id", childColumns = "card"))
 public class Media {
 
+    @PrimaryKey
+    @NonNull
+    private PostCard card;
+    @PrimaryKey
+    @NonNull
     private String type;
     private String url;
     private String descrioption;
-    private PostCard postCard;
 
     public Media() {    }
 
-    public Media(String type, String url, String descrioption, PostCard postCard) {
+    public Media(String type, String url, String descrioption, PostCard card) {
         this.type = type;
         this.url = url;
         this.descrioption = descrioption;
-        this.postCard = postCard;
+        this.card = card;
     }
 
     public String getType() {
@@ -40,11 +50,11 @@ public class Media {
         this.descrioption = descrioption;
     }
 
-    public PostCard getPostCard() {
-        return postCard;
+    public PostCard getcard() {
+        return card;
     }
 
-    public void setPostCard(PostCard postCard) {
-        this.postCard = postCard;
+    public void setcard(PostCard card) {
+        this.card = card;
     }
 }
