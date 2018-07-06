@@ -1,19 +1,31 @@
 package com.geopostcards.cleblond2016.geopostcards.BO;
+import android.arch.persistence.room.ColumnInfo;
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.ForeignKey;
+import android.arch.persistence.room.Ignore;
+import android.arch.persistence.room.PrimaryKey;
+import android.support.annotation.NonNull;
 
+@Entity(tableName = "users", foreignKeys = @ForeignKey(entity = User.class, parentColumns = "id", childColumns = "user"))
 public class PostCard {
 
-    private int id;
+    @PrimaryKey
+    @NonNull
+    private String id;
+
     private long latitude;
     private long longitude;
     private String title;
     private String message;
     private User user;
+
+    @Ignore
     private Media media;
 
     public PostCard() {
     }
 
-    public PostCard(int id, long latitude, long longitude, String title, String message, User user) {
+    public PostCard(String id, long latitude, long longitude, String title, String message, User user) {
         this.id = id;
         this.latitude = latitude;
         this.longitude = longitude;
@@ -22,7 +34,7 @@ public class PostCard {
         this.user = user;
     }
 
-    public PostCard(int id, long latitude, long longitude, String title, String message, User user, Media media) {
+    public PostCard(String id, long latitude, long longitude, String title, String message, User user, Media media) {
         this.id = id;
         this.latitude = latitude;
         this.longitude = longitude;
@@ -36,11 +48,11 @@ public class PostCard {
      * getter / setter
      */
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 
