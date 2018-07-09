@@ -8,6 +8,7 @@ import java.util.List;
 
 public abstract class UserDAO extends BaseDAO<User> {
 
+
         @Query("SELECT * FROM users")
         public abstract List<User> getAllUsers();
 

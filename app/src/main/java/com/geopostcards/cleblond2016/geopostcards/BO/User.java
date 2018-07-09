@@ -26,13 +26,22 @@ public class User {
      */
     public User() {    }
 
-    public User(int id, String useName, String token_id, String email, String password, ArrayList<PostCard> postCards) {
-        this.id = id;
+    public User(String useName, String token_id, String email, String password) {
+        this();
         this.useName = useName;
         this.token_id = token_id;
         this.email = email;
         this.password = password;
+    }
+
+    public User(String useName, String token_id, String email, String password, ArrayList<PostCard> postCards) {
+        this(useName,token_id,email,password);
         this.postCards = postCards;
+    }
+
+    public User(int id, String useName, String token_id, String email, String password, ArrayList<PostCard> postCards) {
+        this(useName,token_id,email,password,postCards);
+        this.id = id;
     }
 
     /**

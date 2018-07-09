@@ -59,16 +59,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
     private void init() {
         lm = (LocationManager) this.getSystemService(LOCATION_SERVICE);
         if (lm.isProviderEnabled(LocationManager.GPS_PROVIDER))
-            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                // TODO: Consider calling
-                //    ActivityCompat#requestPermissions
-                // here to request the missing permissions, and then overriding
-                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                //                                          int[] grantResults)
-                // to handle the case where the user grants the permission. See the documentation
-                // for ActivityCompat#requestPermissions for more details.
-                return;
-            }lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 10000, 0, this);
+            lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 10000, 0, this);
 
         lm.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 10000, 0, this);
 
@@ -88,8 +79,10 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
      * @return
      */
     private boolean checkAndRequestMultiplePermissions() {
-        String[] permissionsNeeeded = new String[] {Manifest.permission.ACCESS_FINE_LOCATION,
-                Manifest.permission.ACCESS_COARSE_LOCATION};
+        String[] permissionsNeeeded = new String[] {
+                Manifest.permission.ACCESS_FINE_LOCATION,
+                Manifest.permission.ACCESS_COARSE_LOCATION
+        };
 
         List<String> listPermissionsNeeded = new ArrayList<>();
         for(String p : permissionsNeeeded) {
