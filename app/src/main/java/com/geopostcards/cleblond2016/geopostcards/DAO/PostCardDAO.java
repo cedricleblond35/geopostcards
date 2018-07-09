@@ -7,7 +7,7 @@ import com.geopostcards.cleblond2016.geopostcards.BO.User;
 
 import java.util.List;
 
-public abstract class PostCardDAO extends BaseDAO<PostCard> {
+public abstract class PostCardDAO implements BaseDAO<PostCard> {
 
     @Query("SELECT * FROM postcards")
     public abstract List<PostCard> getAllPostCards();

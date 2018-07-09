@@ -15,14 +15,14 @@ public class Media {
     @NonNull
     private String type;
     private String url;
-    private String descrioption;
+    private String description;
 
     public Media() {    }
 
-    public Media(String type, String url, String descrioption, PostCard card) {
+    public Media(String type, String url, String description, PostCard card) {
         this.type = type;
         this.url = url;
-        this.descrioption = descrioption;
+        this.description = description;
         this.card = card;
     }
 
@@ -42,12 +42,12 @@ public class Media {
         this.url = url;
     }
 
-    public String getDescrioption() {
-        return descrioption;
+    public String getDescription() {
+        return description;
     }
 
-    public void setDescrioption(String descrioption) {
-        this.descrioption = descrioption;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public PostCard getcard() {

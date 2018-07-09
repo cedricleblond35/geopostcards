@@ -7,7 +7,7 @@ import com.geopostcards.cleblond2016.geopostcards.BO.PostCard;
 
 import java.util.List;
 
-public abstract class MediaDAO extends BaseDAO<Media> {
+public abstract class MediaDAO implements BaseDAO<Media> {
 
     @Query("SELECT * FROM medias")
     public abstract List<PostCard> getAllMedias();

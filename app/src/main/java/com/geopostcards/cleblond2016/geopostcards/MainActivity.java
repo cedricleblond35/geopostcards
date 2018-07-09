@@ -1,6 +1,7 @@
 package com.geopostcards.cleblond2016.geopostcards;
 
 import android.Manifest;
+import android.arch.persistence.room.Room;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
@@ -21,6 +22,9 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 
+import com.geopostcards.cleblond2016.geopostcards.DAO.AppDataBase;
+import com.geopostcards.cleblond2016.geopostcards.DAO.AppExecutors;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,12 +35,16 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
     private double latitude;
     private double longitude;
     private float accuracy;
+    private AppExecutors mAppExecutors;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        mAppExecutors = new AppExecutors();
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -57,11 +65,12 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
     }
 
     private void init() {
-        lm = (LocationManager) this.getSystemService(LOCATION_SERVICE);
+        Toast.makeText(this, "Dans le init", Toast.LENGTH_SHORT).show();
+        /*lm = (LocationManager) this.getSystemService(LOCATION_SERVICE);
         if (lm.isProviderEnabled(LocationManager.GPS_PROVIDER))
             lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 10000, 0, this);
 
-        lm.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 10000, 0, this);
+        lm.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 10000, 0, this);*/
 
     }
 
@@ -92,13 +101,12 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
             }
         }
         if(!listPermissionsNeeded.isEmpty()) {
-            ActivityCompat.requestPermissions(this,
-                    listPermissionsNeeded.toArray(new String[listPermissionsNeeded.size()]),
-                    REQUEST_CODE);
+            ActivityCompat.requestPermissions(this, listPermissionsNeeded.toArray(new String[listPermissionsNeeded.size()]), REQUEST_CODE);
             return false;
         }
         return true;
     }
+
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode) {

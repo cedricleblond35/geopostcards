@@ -22,25 +22,24 @@ public class PostCard {
     @Ignore
     private Media media;
 
-    public PostCard() {
+    public PostCard() {}
+
+    public PostCard(long latitude, long longitude, String title, String message, User user) {
+        this();
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.title = title;
+        this.message = message;
+        this.user = user;
     }
 
     public PostCard(String id, long latitude, long longitude, String title, String message, User user) {
+        this(latitude,longitude,title,message,user);
         this.id = id;
-        this.latitude = latitude;
-        this.longitude = longitude;
-        this.title = title;
-        this.message = message;
-        this.user = user;
     }
 
     public PostCard(String id, long latitude, long longitude, String title, String message, User user, Media media) {
-        this.id = id;
-        this.latitude = latitude;
-        this.longitude = longitude;
-        this.title = title;
-        this.message = message;
-        this.user = user;
+        this(id,latitude,longitude,title,message,user);
         this.media = media;
     }
 
@@ -103,8 +102,6 @@ public class PostCard {
     public void setMedia(Media media) {
         this.media = media;
     }
-
-
 
     @Override
     public String toString() {

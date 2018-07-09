@@ -5,15 +5,20 @@ import android.arch.persistence.room.Delete;
 import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.Update;
 
+import java.util.List;
+
 
 @Dao
-public abstract class BaseDAO<T> {
+public interface BaseDAO<T> {
     @Insert
-    abstract boolean insert(T object);
+    boolean insert(T object);
 
+    @Insert
+    boolean insertAll(List<T> listObject);
+    
     @Update
-    abstract boolean update(T object);
+    boolean update(T object);
 
     @Delete
-    abstract boolean delete(T object);
+    boolean delete(T object);
 }
