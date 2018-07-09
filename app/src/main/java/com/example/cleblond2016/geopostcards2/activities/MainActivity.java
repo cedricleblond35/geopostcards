@@ -1,4 +1,4 @@
-package com.example.cleblond2016.geopostcards2;
+package com.example.cleblond2016.geopostcards2.activities;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
@@ -18,6 +18,8 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
+
+import com.example.cleblond2016.geopostcards2.R;
 
 import java.util.ArrayList;
 import java.util.List;
