@@ -88,6 +88,18 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
         return super.onOptionsItemSelected(item);
     }
 
+
+    /************************************************************
+     * Location
+     *
+     */
+
+    /**
+     * Cette méthode est appelée quand une source de localisation est activée (GPS, 3G..etc).
+     * L’argument représente le nom de la source activée. Vous pouvez par exemple vous abonner à la
+     * mise à jour de localisation via cette source
+     * @param location
+     */
     @Override
     public void onLocationChanged(Location location) {
         latitude = location.getLatitude();
@@ -98,16 +110,30 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
         Log.i(TAG, "latitude: "+ latitude + " long : " + longitude + " accuracy :" + accuracy);
     }
 
+    /**
+     * * Appeler quand le status d’une source change.
+     * Il existe 3 statuts (OUT_OF_SERVICE, TEMPORARILY_UNAVAILABLE, AVAILABLE).
+     * @param provider : the name of the location provider associated with this update.
+     * @param status : int: LocationProvider.OUT_OF_SERVICE if the provider is out of service, and this is not expected to change in the near future; LocationProvider.TEMPORARILY_UNAVAILABLE if the provider is temporarily unavailable but is expected to be available shortly; and LocationProvider.AVAILABLE if the provider is currently available.
+     * @param extras : Bundle: an optional Bundle which will contain provider specific status variables.
+     */
     @Override
     public void onStatusChanged(String provider, int status, Bundle extras) {
-
+        Toast.makeText(getApplicationContext(), "GPS", Toast.LENGTH_LONG).show();
     }
+
 
     @Override
     public void onProviderEnabled(String provider) {
 
     }
 
+    /**
+     * Cette méthode est appelée quand une source de localisation est désactivée(GPS, 3G..etc).
+     * L’argument est le nom de la source désactivée. Vous pouvez par exemple vous désabonner à la
+     * mise à jour de localisation via cette source.
+     * @param s
+     */
     @Override
     public void onProviderDisabled(String provider) {
 
