@@ -132,7 +132,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
      * Cette méthode est appelée quand une source de localisation est désactivée(GPS, 3G..etc).
      * L’argument est le nom de la source désactivée. Vous pouvez par exemple vous désabonner à la
      * mise à jour de localisation via cette source.
-     * @param s
+     * @param
      */
     @Override
     public void onProviderDisabled(String provider) {
