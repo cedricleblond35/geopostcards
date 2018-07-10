@@ -11,13 +11,13 @@
 
     <TextView
         android:id="@+id/create_post_card_lbl_title"
-        android:layout_width="100dp"
+        android:layout_width="80dp"
         android:layout_height="wrap_content"
         android:text="@string/titre"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintBaseline_toBaselineOf="@+id/create_post_card_title"
-        />
+    />
 
     <EditText
         android:id="@+id/create_post_card_title"
@@ -28,25 +28,133 @@
         app:layout_constraintRight_toRightOf="parent"
     />
 
-    <!-- ##### DESCRIPTION ##### -->
+    <!-- ##### MESSAGE ##### -->
 
     <TextView
-        android:id="@+id/create_post_card_lbl_description"
-        android:layout_width="100dp"
+        android:id="@+id/create_post_card_lbl_message"
+        android:layout_width="80dp"
         android:layout_height="wrap_content"
-        android:text="@string/description"
+        android:text="@string/message"
         app:layout_constraintTop_toBottomOf="@+id/create_post_card_title"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintBaseline_toBaselineOf="@+id/create_post_card_description"
+        app:layout_constraintBaseline_toBaselineOf="@+id/create_post_card_message"
     />
 
     <EditText
-        android:id="@+id/create_post_card_description"
+        android:id="@+id/create_post_card_message"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:inputType="text|textMultiLine"
-        app:layout_constraintLeft_toRightOf="@+id/create_post_card_lbl_description"
+        app:layout_constraintLeft_toRightOf="@+id/create_post_card_lbl_message"
         app:layout_constraintTop_toBottomOf="@+id/create_post_card_title"
+        app:layout_constraintRight_toRightOf="parent"
+    />
+
+    <!-- ##### MEDIA ##### -->
+
+    <TextView
+        android:id="@+id/create_post_card_lbl_media"
+        android:layout_width="80dp"
+        android:layout_height="wrap_content"
+        android:text="@string/media"
+        app:layout_constraintTop_toBottomOf="@+id/create_post_card_message"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintBaseline_toBaselineOf="@+id/create_post_card_btn_image"
+    />
+    
+    <Button
+        android:id="@+id/create_post_card_btn_image"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:text="@string/image"
+        app:layout_constraintTop_toBottomOf="@+id/create_post_card_message"
+        app:layout_constraintLeft_toRightOf="@+id/create_post_card_lbl_media"
+    />
+
+    <Button
+        android:id="@+id/create_post_card_btn_son"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:text="@string/son"
+        app:layout_constraintTop_toBottomOf="@+id/create_post_card_message"
+        app:layout_constraintLeft_toRightOf="@+id/create_post_card_btn_image"
+    />
+
+    <Button
+        android:id="@+id/create_post_card_btn_video"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:text="@string/video"
+        app:layout_constraintTop_toBottomOf="@+id/create_post_card_message"
+        app:layout_constraintLeft_toRightOf="@+id/create_post_card_btn_son"
+    />
+
+    <!-- ##### DESCRIPTION IMAGE ##### -->
+
+    <TextView
+        android:id="@+id/create_post_card_lbl_description_image"
+        android:layout_width="80dp"
+        android:layout_height="wrap_content"
+        android:text="@string/description"
+        app:layout_constraintTop_toBottomOf="@+id/create_post_card_btn_video"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintBaseline_toBaselineOf="@+id/create_post_card_description_image"
+    />
+
+    <EditText
+        android:id="@+id/create_post_card_description_image"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:inputType="text|textMultiLine"
+        android:hint="@string/image"
+        app:layout_constraintLeft_toRightOf="@+id/create_post_card_lbl_description_image"
+        app:layout_constraintTop_toBottomOf="@+id/create_post_card_btn_video"
+        app:layout_constraintRight_toRightOf="parent"
+    />
+
+    <!-- ##### DESCRIPTION SON ##### -->
+
+    <TextView
+        android:id="@+id/create_post_card_lbl_description_son"
+        android:layout_width="80dp"
+        android:layout_height="wrap_content"
+        android:text="@string/description"
+        app:layout_constraintTop_toBottomOf="@+id/create_post_card_description_image"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintBaseline_toBaselineOf="@+id/create_post_card_description_son"
+    />
+
+    <EditText
+        android:id="@+id/create_post_card_description_son"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:inputType="text|textMultiLine"
+        android:hint="@string/son"
+        app:layout_constraintLeft_toRightOf="@+id/create_post_card_lbl_description_son"
+        app:layout_constraintTop_toBottomOf="@+id/create_post_card_description_image"
+        app:layout_constraintRight_toRightOf="parent"
+    />
+
+    <!-- ##### DESCRIPTION VIDEO ##### -->
+
+    <TextView
+        android:id="@+id/create_post_card_lbl_description_video"
+        android:layout_width="80dp"
+        android:layout_height="wrap_content"
+        android:text="@string/description"
+        app:layout_constraintTop_toBottomOf="@+id/create_post_card_description_son"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintBaseline_toBaselineOf="@+id/create_post_card_description_video"
+    />
+
+    <EditText
+        android:id="@+id/create_post_card_description_video"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:inputType="text|textMultiLine"
+        android:hint="@string/video"
+        app:layout_constraintLeft_toRightOf="@+id/create_post_card_lbl_description_video"
+        app:layout_constraintTop_toBottomOf="@+id/create_post_card_description_son"
         app:layout_constraintRight_toRightOf="parent"
     />
 
@@ -61,7 +169,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toLeftOf="@+id/create_post_card_latitude"
-        />
+    />
 
     <EditText
         android:id="@+id/create_post_card_latitude"
@@ -73,7 +181,7 @@
         android:focusableInTouchMode="false"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toRightOf="@+id/create_post_card_lbl_latitude"
-        />
+    />
 
     <!-- ##### LONGITUDE ##### -->
 
@@ -86,7 +194,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toRightOf="@+id/create_post_card_latitude"
         app:layout_constraintRight_toLeftOf="@+id/create_post_card_longitude"
-        />
+    />
 
     <EditText
         android:id="@+id/create_post_card_longitude"
@@ -99,6 +207,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toRightOf="@+id/create_post_card_lbl_longitude"
         app:layout_constraintRight_toRightOf="parent"
-        />
+    />
 
 </android.support.constraint.ConstraintLayout>
