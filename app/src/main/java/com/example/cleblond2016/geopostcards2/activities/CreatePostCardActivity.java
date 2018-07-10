@@ -3,11 +3,16 @@ package com.example.cleblond2016.geopostcards2.activities;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.EditText;
 
 import com.example.cleblond2016.geopostcards2.R;
 
 public class CreatePostCardActivity extends AppCompatActivity {
+
+    public static final String EXTRA_LATITUDE = "lat";
+    public static final String EXTRA_LONGITUDE = "long";
+    private static final String TAG = "CreatePostCardActivity" ;
 
     private EditText edtLatitude;
     private EditText edtLongitude;
@@ -29,8 +34,11 @@ public class CreatePostCardActivity extends AppCompatActivity {
 
         Intent intentRecu = getIntent();
         if(intentRecu != null) {
-            actualLatitude = intentRecu.getDoubleExtra("Latitude");
-            actualLongitude = intentRecu.getDoubleExtra("Longitude");
+            double defaultValue = 0.00;
+            actualLatitude = intentRecu.getDoubleExtra(EXTRA_LATITUDE, defaultValue);
+            actualLongitude = intentRecu.getDoubleExtra(EXTRA_LONGITUDE, defaultValue);
         }
+        Log.i(TAG, "actualLatitude :" + actualLatitude);
+        Log.i(TAG, "actualLongitude :" + actualLongitude);
     }
 }

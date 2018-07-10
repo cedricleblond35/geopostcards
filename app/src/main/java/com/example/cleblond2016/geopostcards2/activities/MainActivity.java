@@ -65,10 +65,10 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                Intent intent = new Intent(MainActivity.this, CreatePostCardActivity.class);
-//                intent.putExtra("latitude", latitude);
-//                intent.putExtra("longitude", longitude);
-//                startActivity(intent);
+                Intent intent = new Intent(MainActivity.this, CreatePostCardActivity.class);
+                intent.putExtra(CreatePostCardActivity.EXTRA_LATITUDE, latitude);
+                intent.putExtra(CreatePostCardActivity.EXTRA_LONGITUDE, longitude);
+                startActivity(intent);
 
 //                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
 //                        .setAction("Action", null).show();
