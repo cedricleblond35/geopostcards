@@ -1,6 +1,7 @@
 package com.example.cleblond2016.geopostcards2;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
@@ -21,19 +22,28 @@ import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.util.ArrayList;
-import java.util.List;
+import org.osmdroid.api.IMapController;
+import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
+import org.osmdroid.util.GeoPoint;
+import org.osmdroid.views.MapView;
+import org.osmdroid.views.overlay.Marker;
 
 public class MainActivity extends AppCompatActivity implements LocationListener {
 
-    LocationManager lm;
-    private String TAG = "MainActivity";
-    public static final int REQUEST_CODE = 1234;
-    double latitude; // latitude
-    double longitude; // longitude
 
-    TextView txtLatitude;
-    TextView txtLongitude;
+    private String TAG = "MainActivity";
+
+    //géolocalisation
+    LocationManager lm;
+    public static final int REQUEST_CODE = 1234;
+    private double latitude;
+    private double longitude;
+
+    //carte
+    private MapView map;
+    private GeoPoint startPoint;
+    private IMapController mapController;
+    private Marker startMarker;
 
 
     // The minimum distance to change Updates in meters
@@ -56,8 +66,13 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                Intent intent = new Intent(MainActivity.this, CreatePostCardActivity.class);
+                intent.putExtra("latitude", latitude);
+                intent.putExtra("longitude", longitude);
+                startActivity(intent);
+
+//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+//                        .setAction("Action", null).show();
             }
         });
 
@@ -70,6 +85,10 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
     protected void onPause() {
         super.onPause();
         lm.removeUpdates(this);
+
+        startPoint.setLatitude(latitude);
+        startPoint.setLongitude(longitude);
+        mapController.setCenter(startPoint);
     }
 
     /***********
@@ -120,11 +139,13 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
 
 
         Log.i(TAG, "latitude: " + latitude + " long : " + longitude );
-        txtLatitude = (TextView) findViewById(R.id.textView_value_latitude);
-        txtLongitude = (TextView) findViewById(R.id.textView_value_longitude);
 
-        txtLatitude.setText(String.valueOf(latitude));
-        txtLongitude.setText(String.valueOf(longitude));
+        startPoint.setLatitude(latitude);
+        startPoint.setLongitude(longitude);
+        mapController.setCenter(startPoint);
+
+        startMarker.setPosition(startPoint);
+        map.getOverlays().add(startMarker);
     }
 
     /**
@@ -183,8 +204,6 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
      * Permission
      *
      */
-
-
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode) {
@@ -199,12 +218,9 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
     private void init() {
         lm = (LocationManager) this.getSystemService(LOCATION_SERVICE);
 
-        if (
-                ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
-                        ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                )
+        if ( ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+                        ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED)
         {
-
             return;
         } else {
             /**
@@ -219,6 +235,24 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
                     LocationManager.NETWORK_PROVIDER,
                     MIN_TIME_BW_UPDATES,
                     MIN_DISTANCE_CHANGE_FOR_UPDATES, this);
+
+            //carte
+            map = (MapView) findViewById(R.id.map);
+            map.setTileSource(TileSourceFactory.MAPNIK);
+            map.setBuiltInZoomControls(true);
+            map.setMultiTouchControls(true);
+
+            Log.i(TAG, "---------------------------------------------------");
+            Log.i(TAG, "latitude :"+latitude + " longitude:"+longitude);
+            Log.i(TAG, "---------------------------------------------------");
+            startPoint = new GeoPoint(latitude, longitude);
+            mapController = map.getController();
+            mapController.setZoom(14);
+            mapController.setCenter(startPoint);
+
+            startMarker = new Marker(map);
+            startMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
+            startMarker.setIcon(getResources().getDrawable(R.mipmap.ic_local));
         }
 
 
