@@ -12,7 +12,9 @@ public class CreatePostCardActivity extends AppCompatActivity {
     private EditText edtLatitude;
     private EditText edtLongitude;
     private EditText edtTitle;
-    private EditText edtDescription;
+    private EditText edtDescriptionImage;
+    private EditText edtDescriptionSon;
+    private EditText edtDescriptionVideo;
 
     private double actualLatitude;
     private double actualLongitude;
@@ -25,7 +27,9 @@ public class CreatePostCardActivity extends AppCompatActivity {
         edtLatitude = findViewById(R.id.create_post_card_latitude);
         edtLongitude = findViewById(R.id.create_post_card_longitude);
         edtTitle = findViewById(R.id.create_post_card_title);
-        edtDescription = findViewById(R.id.create_post_card_description);
+        edtDescriptionImage = findViewById(R.id.create_post_card_description_image);
+        edtDescriptionSon = findViewById(R.id.create_post_card_description_son);
+        edtDescriptionVideo = findViewById(R.id.create_post_card_description_video);
 
         Intent intentRecu = getIntent();
         if(intentRecu != null) {
