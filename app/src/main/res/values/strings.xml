@@ -8,4 +8,9 @@
     <string name="provider_new_status">The provider %1$s has now a new status %2$s</string>
     <string name="titre">Titre :</string>
     <string name="description">Description :</string>
+    <string name="message">Message :</string>
+    <string name="media">Media :</string>
+    <string name="image">Image</string>
+    <string name="son">Son</string>
+    <string name="video">Vidéo</string>
 </resources>
