@@ -5,17 +5,21 @@ import java.util.List;
 public interface BaseDAO<T> {
 
     /* ##### SELECT ##### */
+
     List<T> selectAll();
 
     /* ##### INSERT ##### */
-    Integer insert(T object);
-    List<T> insertAll(List<T> listObject);
+
+    boolean insert(T object);
+    boolean insertAll(List<T> listObject);
 
     /* ##### UPDATE ##### */
-    Integer update(T object);
-    List<T> updateAll(List<T> listObject);
+
+    boolean update(T object);
+    boolean updateAll(List<T> listObject);
 
     /* ##### DELETE ##### */
+
     boolean delete(T object);
-    List<T> deleteAll(List<T> listObject);
+    boolean deleteAll(List<T> listObject);
 }
