@@ -6,7 +6,7 @@ import java.util.List;
 public class User {
 
     private int id;
-    private String useName;
+    private String username;
     private String token_id;
     private String email;
     private String password;
@@ -18,21 +18,26 @@ public class User {
      */
     public User() {}
 
-    public User(String useName, String token_id, String email, String password) {
+    public User(String username, String token_id, String email, String password) {
         this();
-        this.useName = useName;
+        this.username = username;
         this.token_id = token_id;
         this.email = email;
         this.password = password;
     }
 
-    public User(String useName, String token_id, String email, String password, ArrayList<PostCard> postCards) {
-        this(useName,token_id,email,password);
+    public User(int id, String username, String token_id, String email, String password) {
+        this(username,token_id,email,password);
+        this.id = id;
+    }
+
+    public User(String username, String token_id, String email, String password, ArrayList<PostCard> postCards) {
+        this(username,token_id,email,password);
         this.postCards = postCards;
     }
 
-    public User(int id, String useName, String token_id, String email, String password, ArrayList<PostCard> postCards) {
-        this(useName,token_id,email,password,postCards);
+    public User(int id, String username, String token_id, String email, String password, ArrayList<PostCard> postCards) {
+        this(username,token_id,email,password,postCards);
         this.id = id;
     }
 
@@ -49,12 +54,12 @@ public class User {
         this.id = id;
     }
 
-    public String getUseName() {
-        return useName;
+    public String getUsername() {
+        return username;
     }
 
-    public void setUseName(String useName) {
-        this.useName = useName;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getToken_id() {
@@ -85,7 +90,7 @@ public class User {
     public String toString() {
         return "User{" +
                 "id=" + id +
-                ", useName='" + useName + '\'' +
+                ", username='" + username + '\'' +
                 ", token_id='" + token_id + '\'' +
                 ", email='" + email + '\'' +
                 ", password='" + password + '\'' +

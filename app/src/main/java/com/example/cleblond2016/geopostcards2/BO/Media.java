@@ -2,19 +2,23 @@ package com.example.cleblond2016.geopostcards2.BO;
 
 public class Media {
 
-    private PostCard card;
+    private String card;
     private String type;
     private String url;
     private String description;
 
     public Media() {}
 
-    public Media(String type, String url, String description, PostCard card) {
+    public Media(String card, String type, String url, String description) {
         this.type = type;
         this.url = url;
         this.description = description;
         this.card = card;
     }
+
+    public String getCard() { return card; }
+
+    public void setCard(String card) { this.card = card; }
 
     public String getType() {
         return type;
@@ -40,11 +44,4 @@ public class Media {
         this.description = description;
     }
 
-    public PostCard getcard() {
-        return card;
-    }
-
-    public void setcard(PostCard card) {
-        this.card = card;
-    }
 }

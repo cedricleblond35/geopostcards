@@ -14,13 +14,22 @@ public class PostCard {
 
     public PostCard() {}
 
-    public PostCard(double latitude, double longitude, String title, String message, User user) {
+    public PostCard(double latitude, double longitude, String title, String message) {
         this();
         this.latitude = latitude;
         this.longitude = longitude;
         this.title = title;
         this.message = message;
+    }
+
+    public PostCard(double latitude, double longitude, String title, String message, User user) {
+        this(latitude, longitude, title, message);
         this.user = user;
+    }
+
+    public PostCard(String id, double latitude, double longitude, String title, String message) {
+        this(latitude, longitude, title, message);
+        this.id = id;
     }
 
     public PostCard(String id, double latitude, double longitude, String title, String message, User user) {
