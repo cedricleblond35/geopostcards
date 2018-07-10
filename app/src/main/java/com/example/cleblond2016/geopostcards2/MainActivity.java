@@ -5,6 +5,7 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.location.LocationProvider;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
@@ -17,6 +18,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -27,9 +29,18 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
     LocationManager lm;
     private String TAG = "MainActivity";
     public static final int REQUEST_CODE = 1234;
-    private double latitude;
-    private double longitude;
-    private float accuracy;
+    double latitude; // latitude
+    double longitude; // longitude
+
+    TextView txtLatitude;
+    TextView txtLongitude;
+
+
+    // The minimum distance to change Updates in meters
+    private static final long MIN_DISTANCE_CHANGE_FOR_UPDATES = 3; // 3 meters
+
+    // The minimum time between updates in milliseconds
+    private static final long MIN_TIME_BW_UPDATES = 1000 * 60 * 1; // 1 minute
 
 
     @Override
@@ -39,6 +50,8 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+
+        //Bouton rose
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -48,16 +61,15 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
             }
         });
 
-        if (checkAndRequestMultiplePermissions()) {
-            init();
-        } else {
-            Toast.makeText(this, "Pour pouvoir utiliser l'appli, vous devez autoriser les permissions", Toast.LENGTH_SHORT).show();
-        }
+        //Démarrer gps
+        init();
+
     }
 
     @Override
     protected void onPause() {
         super.onPause();
+        lm.removeUpdates(this);
     }
 
     /***********
@@ -104,10 +116,15 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
     public void onLocationChanged(Location location) {
         latitude = location.getLatitude();
         longitude = location.getLongitude();
-        accuracy = location.getAccuracy(); //Obtenez la précision horizontale estimée de cet emplacement, radial, en mètres.
+        //accuracy = location.getAccuracy(); //Obtenez la précision horizontale estimée de cet emplacement, radial, en mètres.
 
 
-        Log.i(TAG, "latitude: "+ latitude + " long : " + longitude + " accuracy :" + accuracy);
+        Log.i(TAG, "latitude: " + latitude + " long : " + longitude );
+        txtLatitude = (TextView) findViewById(R.id.textView_value_latitude);
+        txtLongitude = (TextView) findViewById(R.id.textView_value_longitude);
+
+        txtLatitude.setText(String.valueOf(latitude));
+        txtLongitude.setText(String.valueOf(longitude));
     }
 
     /**
@@ -120,12 +137,32 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
     @Override
     public void onStatusChanged(String provider, int status, Bundle extras) {
         Toast.makeText(getApplicationContext(), "GPS", Toast.LENGTH_LONG).show();
+        String newStatus = "";
+        switch (status) {
+            case LocationProvider.OUT_OF_SERVICE:
+                newStatus = "OUT_OF_SERVICE";
+                break;
+            case LocationProvider.TEMPORARILY_UNAVAILABLE:
+                newStatus = "TEMPORARILY_UNAVAILABLE";
+                break;
+            case LocationProvider.AVAILABLE:
+                newStatus = "AVAILABLE";
+                break;
+        }
+        //String msg = String.format(getResources().getString(R.string.provider_disabled), provider, newStatus);
+        Toast.makeText(this, newStatus, Toast.LENGTH_SHORT).show();
+
     }
 
 
+    /**
+     * Cette méthode est appelée quand une source de localisation est activée (GPS, 3G..etc).
+     * @param provider
+     */
     @Override
     public void onProviderEnabled(String provider) {
-
+        String msg = String.format(getResources().getString(R.string.provider_enabled), provider);
+        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
     }
 
     /**
@@ -136,7 +173,8 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
      */
     @Override
     public void onProviderDisabled(String provider) {
-
+        String msg = String.format(getResources().getString(R.string.provider_disabled), provider);
+        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
     }
 
 
@@ -145,37 +183,13 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
      * Permission
      *
      */
-    /**
-     *
-     * @return
-     */
-    private boolean checkAndRequestMultiplePermissions() {
-        String[] permissionsNeeeded = new String[] {
-                Manifest.permission.ACCESS_FINE_LOCATION,
-                Manifest.permission.ACCESS_COARSE_LOCATION
-        };
 
-        List<String> listPermissionsNeeded = new ArrayList<>();
-        for(String p : permissionsNeeeded) {
-            int check = ContextCompat.checkSelfPermission(this, p);
-            if(check != PackageManager.PERMISSION_GRANTED) {
-                listPermissionsNeeded.add(p);
-            }
-        }
-        if(!listPermissionsNeeded.isEmpty()) {
-            ActivityCompat.requestPermissions(this,
-                    listPermissionsNeeded.toArray(new String[listPermissionsNeeded.size()]),
-                    REQUEST_CODE);
-            return false;
-        }
-        return true;
-    }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode) {
             case REQUEST_CODE:
-                if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     init();
                 }
                 break;
@@ -184,6 +198,29 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
 
     private void init() {
         lm = (LocationManager) this.getSystemService(LOCATION_SERVICE);
+
+        if (
+                ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+                        ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                )
+        {
+
+            return;
+        } else {
+            /**
+             * requestLocationUpdates:
+             * -----------------------
+             * String: le nom du fournisseur avec lequel s'inscrire
+             * long: intervalle de temps minimum entre les mises à jour d'emplacement, en millisecondes
+             * float: distance minimale entre les mises à jour de l'emplacement, en mètres
+             * LocationListener: un LocationListener dont la méthode LocationListener.onLocationChanged (Location) sera appelée pour chaque mise à jour d'emplacement
+             */
+            lm.requestLocationUpdates(
+                    LocationManager.NETWORK_PROVIDER,
+                    MIN_TIME_BW_UPDATES,
+                    MIN_DISTANCE_CHANGE_FOR_UPDATES, this);
+        }
+
 
     }
 
