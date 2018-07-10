@@ -22,24 +22,24 @@ public class PostCardService {
 
     /* ##### SELECT ##### */
 
-    public PostCard getUserById(Context context, String id){
+    public PostCard getPostCardById(Context context, String id){
         PostCardDAO dao = new PostCardDAO(context);
         return dao.selectOneById(id);
     }
 
-    public List<PostCard> getAllUsers(Context context){
+    public List<PostCard> getAllPostCards(Context context){
         PostCardDAO dao = new PostCardDAO(context);
         return dao.selectAll();
     }
 
     /* ##### INSERT ##### */
 
-    public boolean insert(Context context, PostCard postCard){
+    public boolean insertPostCard(Context context, PostCard postCard){
         PostCardDAO dao = new PostCardDAO(context);
         return dao.insert(postCard);
     }
 
-    public boolean insertAll(Context context, List<PostCard> postCards){
+    public boolean insertAllPostCards(Context context, List<PostCard> postCards){
         PostCardDAO dao = new PostCardDAO(context);
         return dao.insertAll(postCards);
     }

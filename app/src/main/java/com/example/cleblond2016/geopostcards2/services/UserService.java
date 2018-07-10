@@ -34,12 +34,12 @@ public class UserService {
 
     /* ##### INSERT ##### */
 
-    public boolean insert(Context context, User user){
+    public boolean insertUser(Context context, User user){
         UserDAO dao = new UserDAO(context);
         return dao.insert(user);
     }
 
-    public boolean insertAll(Context context, List<User> users){
+    public boolean insertAllUsers(Context context, List<User> users){
         UserDAO dao = new UserDAO(context);
         return dao.insertAll(users);
     }

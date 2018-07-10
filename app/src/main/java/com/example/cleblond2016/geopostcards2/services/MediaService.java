@@ -22,24 +22,24 @@ public class MediaService {
 
     /* ##### SELECT ##### */
 
-    public Media getUserById(Context context, String card, String type){
+    public Media getMediaById(Context context, String card, String type){
         MediaDAO dao = new MediaDAO(context);
         return dao.selectOneById(card, type);
     }
 
-    public List<Media> getAllUsers(Context context){
+    public List<Media> getAllMedias(Context context){
         MediaDAO dao = new MediaDAO(context);
         return dao.selectAll();
     }
 
     /* ##### INSERT ##### */
 
-    public boolean insert(Context context, Media media){
+    public boolean insertMedia(Context context, Media media){
         MediaDAO dao = new MediaDAO(context);
         return dao.insert(media);
     }
 
-    public boolean insertAll(Context context, List<Media> medias){
+    public boolean insertAllMedias(Context context, List<Media> medias){
         MediaDAO dao = new MediaDAO(context);
         return dao.insertAll(medias);
     }

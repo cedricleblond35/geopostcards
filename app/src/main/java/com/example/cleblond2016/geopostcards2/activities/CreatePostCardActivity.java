@@ -45,4 +45,13 @@ public class CreatePostCardActivity extends AppCompatActivity {
             Log.i(TAG, "actualLongitude :" + actualLongitude);
         }
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if(actualLatitude != 0 && actualLongitude != 0) {
+            edtLatitude.setText(Double.toString(actualLatitude));
+            edtLongitude.setText(Double.toString(actualLongitude));
+        }
+    }
 }
