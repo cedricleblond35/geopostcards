@@ -19,13 +19,18 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.example.cleblond2016.geopostcards2.BO.PostCard;
 import com.example.cleblond2016.geopostcards2.R;
+import com.example.cleblond2016.geopostcards2.services.PostCardService;
+import com.example.cleblond2016.geopostcards2.utils.Conversion;
 
 import org.osmdroid.api.IMapController;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.Marker;
+
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements LocationListener {
 
@@ -35,14 +40,20 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
     //géolocalisation
     LocationManager lm;
     public static final int REQUEST_CODE = 1234;
-    private double latitude;
-    private double longitude;
+    private double latitudeUser;
+    private double longitudeUser;
 
     //carte
     private MapView map;
-    private GeoPoint startPoint;
+    private GeoPoint userPoint;
     private IMapController mapController;
     private Marker startMarker;
+
+
+    //cards
+    private List<PostCard> carts;
+    private List<Marker> markers;
+    private PostCardService p;
 
 
     // The minimum distance to change Updates in meters
@@ -59,21 +70,25 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-
         //Bouton rose
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(MainActivity.this, CreatePostCardActivity.class);
-                intent.putExtra(CreatePostCardActivity.EXTRA_LATITUDE, latitude);
-                intent.putExtra(CreatePostCardActivity.EXTRA_LONGITUDE, longitude);
+                intent.putExtra(CreatePostCardActivity.EXTRA_LATITUDE, latitudeUser);
+                intent.putExtra(CreatePostCardActivity.EXTRA_LONGITUDE, longitudeUser);
                 startActivity(intent);
 
 //                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
 //                        .setAction("Action", null).show();
             }
         });
+
+        //Chargement des carte postal
+        p = PostCardService.getInstance();
+        //carts = p.selectAllPostCardswhithLimit(this);
+
 
         //Démarrer gps
         init();
@@ -85,9 +100,15 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
         super.onPause();
         lm.removeUpdates(this);
 
-        startPoint.setLatitude(latitude);
-        startPoint.setLongitude(longitude);
-        mapController.setCenter(startPoint);
+        userPoint.setLatitude(latitudeUser);
+        userPoint.setLongitude(longitudeUser);
+        mapController.setCenter(userPoint);
+
+
+        //Chargement des carte postal
+        p = PostCardService.getInstance();
+        carts = p.selectAllPostCardswhithLimit(this, latitudeUser, longitudeUser, 1.00);
+        
     }
 
     /***********
@@ -132,20 +153,37 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
      */
     @Override
     public void onLocationChanged(Location location) {
-        latitude = location.getLatitude();
-        longitude = location.getLongitude();
-        //accuracy = location.getAccuracy(); //Obtenez la précision horizontale estimée de cet emplacement, radial, en mètres.
+       printCarts();
+        latitudeUser = location.getLatitude();
+        longitudeUser = location.getLongitude();
 
+        carts = p.selectAllPostCardswhithLimit(this, latitudeUser, longitudeUser, 1.00);
 
-        Log.i(TAG, "latitude: " + latitude + " long : " + longitude );
+        Log.i(TAG, "latitude: " + latitudeUser + " long : " + longitudeUser );
 
-        startPoint.setLatitude(latitude);
-        startPoint.setLongitude(longitude);
-        mapController.setCenter(startPoint);
+        //carte
+        userPoint.setLatitude(latitudeUser);
+        userPoint.setLongitude(longitudeUser);
+        mapController.setCenter(userPoint);
 
-        startMarker.setPosition(startPoint);
+        //marker
+        startMarker.setPosition(userPoint);
         map.getOverlays().add(startMarker);
+
+        //Afficher l'ensemble des cartes
+        for(PostCard postCard : carts)
+        {
+            GeoPoint pointCart = new GeoPoint(postCard.getLatitude(), postCard.getLongitude());
+
+            Marker markerCart = new Marker(map);
+            markerCart.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
+            markerCart.setIcon(getResources().getDrawable(R.mipmap.ic_local));
+            markerCart.setPosition(pointCart);
+            map.getOverlays().add(markerCart);
+        }
     }
+
+
 
     /**
      * * Appeler quand le status d’une source change.
@@ -181,8 +219,8 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
      */
     @Override
     public void onProviderEnabled(String provider) {
-        String msg = String.format(getResources().getString(R.string.provider_enabled), provider);
-        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
+        //String msg = String.format(getResources().getString(R.string.provider_enabled), provider);
+        Toast.makeText(this, "GPS activivé", Toast.LENGTH_SHORT).show();
     }
 
     /**
@@ -197,6 +235,8 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
         Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
     }
 
+    private void printCarts() {
+    }
 
     /*********************
      *
@@ -241,13 +281,11 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
             map.setBuiltInZoomControls(true);
             map.setMultiTouchControls(true);
 
-            Log.i(TAG, "---------------------------------------------------");
-            Log.i(TAG, "latitude :"+latitude + " longitude:"+longitude);
-            Log.i(TAG, "---------------------------------------------------");
-            startPoint = new GeoPoint(latitude, longitude);
+
+            userPoint = new GeoPoint(latitudeUser, longitudeUser);
             mapController = map.getController();
             mapController.setZoom(14);
-            mapController.setCenter(startPoint);
+            mapController.setCenter(userPoint);
 
             startMarker = new Marker(map);
             startMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
