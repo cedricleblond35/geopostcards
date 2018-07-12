@@ -41,16 +41,16 @@ public class PostCardService {
      */
     public List<PostCard> getAllPostCards(Context context){
         PostCardDAO dao = new PostCardDAO(context);
-        //return dao.selectAll();
+        return dao.selectAll();
 
-        List<PostCard> postCards = new ArrayList<>();
+        /*List<PostCard> postCards = new ArrayList<>();
         PostCard p2 = new PostCard(48.1119800, -1.6742900,"rennes", "message perso");
         PostCard p3 = new PostCard(48.0392400,-1.7053300,"Chartres-de-Bretagne", "message perso");
         postCards.add(p2);
         postCards.add(p3);
 
 
-        return postCards;
+        return postCards;*/
     }
 
 

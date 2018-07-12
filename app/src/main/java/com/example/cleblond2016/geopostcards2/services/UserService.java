@@ -24,16 +24,16 @@ public class UserService {
 
     public User getUserById(Context context, int id){
         UserDAO dao = new UserDAO(context);
-        User user1 = new User(id,"user1", "erosmlg5resg6r64er68", "user1@campus-eni.fr", "pass1");
-        return user1;
-        //return dao.selectOneById(id);
+        //User user1 = new User(id,"user1", "erosmlg5resg6r64er68", "user1@campus-eni.fr", "pass1");
+        //return user1;
+        return dao.selectOneById(id);
     }
 
     public User getUserByEmail(Context context, String email){
         UserDAO dao = new UserDAO(context);
-        User user1 = new User("user1", "erosmlg5resg6r64er68", email, "pass1");
-        return user1;
-        //return dao.selectOneById(id);
+        //User user1 = new User("user1", "erosmlg5resg6r64er68", email, "pass1");
+        //return user1;
+        return dao.selectOneByEmail(email);
     }
 
     public List<User> getAllUsers(Context context){

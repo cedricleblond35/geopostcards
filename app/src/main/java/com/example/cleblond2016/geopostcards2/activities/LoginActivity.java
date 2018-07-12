@@ -324,7 +324,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             }
 
             user = UserService.getInstance().getUserByEmail(LoginActivity.this, mEmail);
-            Log.i("", "   rffgggggggffff :"+user.toString());
+            Log.i("", "   ##################### :"+user.toString());
             if (user != null &&  user.getPassword().equals(mPassword)) return true;
 
 

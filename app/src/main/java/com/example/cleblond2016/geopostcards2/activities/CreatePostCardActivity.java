@@ -18,9 +18,11 @@ import android.widget.ImageView;
 
 import com.example.cleblond2016.geopostcards2.BO.Media;
 import com.example.cleblond2016.geopostcards2.BO.PostCard;
+import com.example.cleblond2016.geopostcards2.BO.User;
 import com.example.cleblond2016.geopostcards2.R;
 import com.example.cleblond2016.geopostcards2.services.MediaService;
 import com.example.cleblond2016.geopostcards2.services.PostCardService;
+import com.example.cleblond2016.geopostcards2.services.UserService;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -38,6 +40,8 @@ public class CreatePostCardActivity extends AppCompatActivity {
     public static final int REQUEST_RECORD_SOUND = 2;
     public static final int REQUEST_VIDEO_CAPTURE = 3;
     private static final String TAG = "CreatePostCardActivity" ;
+
+    private Integer idUser;
 
     private EditText edtLatitude;
     private EditText edtLongitude;
@@ -79,8 +83,10 @@ public class CreatePostCardActivity extends AppCompatActivity {
             double defaultValue = 0.00;
             actualLatitude = intentRecu.getDoubleExtra(EXTRA_LATITUDE, defaultValue);
             actualLongitude = intentRecu.getDoubleExtra(EXTRA_LONGITUDE, defaultValue);
+            idUser = intentRecu.getIntExtra(MainActivity.EXTRA_ID_USER, MainActivity.DEFAULT_ID_USER);
             Log.i(TAG, "actualLatitude :" + actualLatitude);
             Log.i(TAG, "actualLongitude :" + actualLongitude);
+            Log.i(TAG, "idUser :" + idUser);
         }
 
         addListenerOnButton();
@@ -232,11 +238,15 @@ public class CreatePostCardActivity extends AppCompatActivity {
         Double latitude = Double.valueOf(edtLatitude.getText().toString());
         Double longitude = Double.valueOf(edtLongitude.getText().toString());
         PostCard postCard = null;
-        if(latitude != null && longitude != null && titre != null) {
+        User connectedUser = null;
+        if(idUser != null) {
+            connectedUser = UserService.getInstance().getUserById(this, idUser);
+        }
+        if(latitude != null && longitude != null && titre != null && connectedUser != null) {
             if(message == null) {
-                postCard = new PostCard(id, latitude, longitude, titre, null);
+                postCard = new PostCard(id, latitude, longitude, titre, null, connectedUser);
             } else {
-                postCard = new PostCard(id, latitude, longitude, titre, message);
+                postCard = new PostCard(id, latitude, longitude, titre, message, connectedUser);
             }
         }
         return postCard;
