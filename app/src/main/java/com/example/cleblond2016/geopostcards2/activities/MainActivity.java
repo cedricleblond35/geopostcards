@@ -40,8 +40,11 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
     //géolocalisation
     LocationManager lm;
     public static final int REQUEST_CODE = 1234;
+    public static final Integer DEFAULT_ID_USER = null;
+    public static final String EXTRA_ID_USER = "idUser";
     private double latitudeUser;
     private double longitudeUser;
+    private int idUser;
 
     //carte
     private MapView map;
@@ -67,8 +70,11 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        idUser = getIntent().getIntExtra(EXTRA_ID_USER, DEFAULT_ID_USER);
 
         //Bouton rose
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -78,6 +84,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
                 Intent intent = new Intent(MainActivity.this, CreatePostCardActivity.class);
                 intent.putExtra(CreatePostCardActivity.EXTRA_LATITUDE, latitudeUser);
                 intent.putExtra(CreatePostCardActivity.EXTRA_LONGITUDE, longitudeUser);
+                intent.putExtra(EXTRA_ID_USER, idUser);
                 startActivity(intent);
 
 //                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
