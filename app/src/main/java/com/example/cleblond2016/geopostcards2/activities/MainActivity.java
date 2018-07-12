@@ -1,8 +1,13 @@
 package com.example.cleblond2016.geopostcards2.activities;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -61,11 +66,6 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
     private Polyline lineCircle;
 
 
-    // The minimum distance to change Updates in meters
-    private static final long MIN_DISTANCE_CHANGE_FOR_UPDATES = 1; // 1 meters
-
-    // The minimum time between updates in milliseconds
-    private static final long MIN_TIME_BW_UPDATES = 1000 * 60 * 1; // 1 minute
 
 
     @Override
@@ -102,6 +102,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
         //Démarrer gps
         init();
 
+
     }
 
     @Override
@@ -121,6 +122,8 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
         p = PostCardService.getInstance();
         carts = p.selectAllPostCardswhithLimit(this, latitudeUser, longitudeUser, 1.00);
         if(this.location != null) printCarts(this.location);
+
+
     }
 
     @Override
@@ -128,7 +131,6 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
         super.onPause();
 
         lm.removeUpdates(this);
-
 
 
     }
@@ -346,8 +348,8 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
              */
             lm.requestLocationUpdates(
                     LocationManager.NETWORK_PROVIDER,
-                    MIN_TIME_BW_UPDATES,
-                    MIN_DISTANCE_CHANGE_FOR_UPDATES, this);
+                    0,
+                    0, this);
 
             //carte
             map = (MapView) findViewById(R.id.map);
