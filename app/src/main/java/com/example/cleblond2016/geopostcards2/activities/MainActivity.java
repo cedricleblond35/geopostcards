@@ -22,14 +22,14 @@ import android.widget.Toast;
 import com.example.cleblond2016.geopostcards2.BO.PostCard;
 import com.example.cleblond2016.geopostcards2.R;
 import com.example.cleblond2016.geopostcards2.services.PostCardService;
-import com.example.cleblond2016.geopostcards2.utils.Conversion;
-
 import org.osmdroid.api.IMapController;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.Marker;
+import org.osmdroid.views.overlay.Polyline;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements LocationListener {
@@ -79,16 +79,12 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
                 intent.putExtra(CreatePostCardActivity.EXTRA_LATITUDE, latitudeUser);
                 intent.putExtra(CreatePostCardActivity.EXTRA_LONGITUDE, longitudeUser);
                 startActivity(intent);
-
-//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-//                        .setAction("Action", null).show();
             }
         });
 
         //Chargement des carte postal
         p = PostCardService.getInstance();
         //carts = p.selectAllPostCardswhithLimit(this);
-
 
         //Démarrer gps
         init();
@@ -111,7 +107,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
         
     }
 
-    /***********
+    /***************************
      *
      * Menu
      * @param menu
@@ -153,34 +149,21 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
      */
     @Override
     public void onLocationChanged(Location location) {
-       printCarts();
-        latitudeUser = location.getLatitude();
-        longitudeUser = location.getLongitude();
+       printCarts(location);
 
-        carts = p.selectAllPostCardswhithLimit(this, latitudeUser, longitudeUser, 1.00);
+        List<GeoPoint> geoPoints = getGeodeticPoints();
+//add your points here
+        Polyline line = new Polyline();   //see note below!
+        line.setPoints(geoPoints);
+        line.setOnClickListener(new Polyline.OnClickListener() {
+            @Override
+            public boolean onClick(Polyline polyline, MapView mapView, GeoPoint eventPos) {
+                Toast.makeText(mapView.getContext(), "polyline with " + polyline.getPoints().size() + "pts was tapped", Toast.LENGTH_LONG).show();
+                return false;
+            }
+        });
+        map.getOverlayManager().add(line);
 
-        Log.i(TAG, "latitude: " + latitudeUser + " long : " + longitudeUser );
-
-        //carte
-        userPoint.setLatitude(latitudeUser);
-        userPoint.setLongitude(longitudeUser);
-        mapController.setCenter(userPoint);
-
-        //marker
-        startMarker.setPosition(userPoint);
-        map.getOverlays().add(startMarker);
-
-        //Afficher l'ensemble des cartes
-        for(PostCard postCard : carts)
-        {
-            GeoPoint pointCart = new GeoPoint(postCard.getLatitude(), postCard.getLongitude());
-
-            Marker markerCart = new Marker(map);
-            markerCart.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
-            markerCart.setIcon(getResources().getDrawable(R.mipmap.ic_local));
-            markerCart.setPosition(pointCart);
-            map.getOverlays().add(markerCart);
-        }
     }
 
 
@@ -220,10 +203,15 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
     @Override
     public void onProviderEnabled(String provider) {
         //String msg = String.format(getResources().getString(R.string.provider_enabled), provider);
-        Toast.makeText(this, "GPS activivé", Toast.LENGTH_SHORT).show();
+        if(provider.equals("network")) {
+            init();
+            Toast.makeText(this, "GPS activivé, localisation en cours ... ", Toast.LENGTH_SHORT).show();
+        }
+
+
     }
 
-    /**
+    /**********************
      * Cette méthode est appelée quand une source de localisation est désactivée(GPS, 3G..etc).
      * L’argument est le nom de la source désactivée. Vous pouvez par exemple vous désabonner à la
      * mise à jour de localisation via cette source.
@@ -231,11 +219,56 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
      */
     @Override
     public void onProviderDisabled(String provider) {
-        String msg = String.format(getResources().getString(R.string.provider_disabled), provider);
-        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "GPS désactivé, merci de l'activer", Toast.LENGTH_SHORT).show();
     }
 
-    private void printCarts() {
+    private void printCarts(Location location) {
+        latitudeUser = location.getLatitude();
+        longitudeUser = location.getLongitude();
+
+        carts = p.selectAllPostCardswhithLimit(this, latitudeUser, longitudeUser, 1.00);
+
+        Log.i(TAG, "latitude: " + latitudeUser + " long : " + longitudeUser );
+
+        //carte
+        userPoint.setLatitude(latitudeUser);
+        userPoint.setLongitude(longitudeUser);
+        mapController.setCenter(userPoint);
+
+        //marker
+        startMarker.setPosition(userPoint);
+        map.getOverlays().add(startMarker);
+
+        //Afficher l'ensemble des cartes
+        for(PostCard postCard : carts)
+        {
+            GeoPoint pointCart = new GeoPoint(postCard.getLatitude(), postCard.getLongitude());
+
+            Marker markerCart = new Marker(map);
+            markerCart.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
+            markerCart.setIcon(getResources().getDrawable(R.mipmap.ic_local));
+            markerCart.setPosition(pointCart);
+            markerCart.setOnMarkerClickListener(new Marker.OnMarkerClickListener() {
+                @Override
+                public boolean onMarkerClick(Marker marker, MapView mapView) {
+                    Log.i(TAG, "mapView :"+ mapView);
+                    Log.i(TAG, "marker :"+ marker);
+                    Intent intent = new Intent(MainActivity.this, DetailPostCardActivity.class);
+                    intent.putExtra(CreatePostCardActivity.EXTRA_LATITUDE, latitudeUser);
+                    intent.putExtra(CreatePostCardActivity.EXTRA_LONGITUDE, longitudeUser);
+                    startActivity(intent);
+
+                    return false;
+                }
+            });
+
+
+
+
+
+
+            map.getOverlays().add(markerCart);
+        }
     }
 
     /*********************
@@ -254,6 +287,11 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
         }
     }
 
+    /**********************
+     *
+     * Affichage de la carte & affichage de l'utilisateur
+     *
+     */
     private void init() {
         lm = (LocationManager) this.getSystemService(LOCATION_SERVICE);
 
@@ -280,20 +318,40 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
             map.setTileSource(TileSourceFactory.MAPNIK);
             map.setBuiltInZoomControls(true);
             map.setMultiTouchControls(true);
-
-
             userPoint = new GeoPoint(latitudeUser, longitudeUser);
             mapController = map.getController();
             mapController.setZoom(14);
             mapController.setCenter(userPoint);
 
+            // Marker de la personne
             startMarker = new Marker(map);
             startMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
-            startMarker.setIcon(getResources().getDrawable(R.mipmap.ic_local));
+            startMarker.setIcon(getResources().getDrawable(R.mipmap.ic_personn_round));
+            map.getOverlays().add(startMarker);
+
+
+
+
+
+
+
+
+
+
+
+
+
         }
-
-
     }
 
 
+    public List<GeoPoint> getGeodeticPoints() {
+        final double radius = 1000;
+        ArrayList<GeoPoint> circlePoints = new ArrayList<GeoPoint>();
+        for (float f = 0; f < 360; f += 1){
+            circlePoints.add(new GeoPoint(latitudeUser , longitudeUser ).destinationPoint(radius, f));
+        }
+        return circlePoints;
+
+    }
 }
