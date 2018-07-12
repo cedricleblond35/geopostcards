@@ -20,6 +20,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -35,7 +36,9 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.example.cleblond2016.geopostcards2.BO.User;
 import com.example.cleblond2016.geopostcards2.R;
+import com.example.cleblond2016.geopostcards2.services.UserService;
 
 import static android.Manifest.permission.READ_CONTACTS;
 
@@ -53,9 +56,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
      * A dummy authentication store containing known user names and passwords.
      * TODO: remove after connecting to a real authentication system.
      */
-    private static final String[] DUMMY_CREDENTIALS = new String[]{
-            "ced@gmail.com:hello", "bar@example.com:world"
-    };
+    private static User user = null;
     /**
      * Keep track of the login task to ensure we can cancel it if requested.
      */
@@ -71,6 +72,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+
         // Set up the login form.
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
         populateAutoComplete();
@@ -320,16 +323,12 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 return false;
             }
 
-            for (String credential : DUMMY_CREDENTIALS) {
-                String[] pieces = credential.split(":");
-                if (pieces[0].equals(mEmail)) {
-                    // Account exists, return true if the password matches.
-                    return pieces[1].equals(mPassword);
-                }
-            }
+            user = UserService.getInstance().getUserByEmail(LoginActivity.this, mEmail);
+            Log.i("", "   rffgggggggffff :"+user.toString());
+            if (user != null &&  user.getPassword().equals(mPassword)) return true;
 
-            // TODO: register the new account here.
-            return true;
+
+            return false;
         }
 
         @Override
@@ -339,8 +338,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
             if (success) {
                 Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                intent.putExtra(CreatePostCardActivity.EXTRA_LATITUDE, mEmail);
-                intent.putExtra(CreatePostCardActivity.EXTRA_LONGITUDE, mPassword);
+                intent.putExtra(MainActivity.EXTRA_ID_USER, user.getId());
                 startActivity(intent);
                 finish();
             } else {
@@ -358,8 +356,9 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
 
     /**
-     * Menu
-     *
+     * Affiche la barre de menu
+     * @param menu
+     * @return
      */
 
     @Override
@@ -368,9 +367,20 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         return true;
     }
 
+    /**
+     * Ajoute des actions sur les boutons de la barre de menu
+     * @param item
+     * @return
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        return super.onOptionsItemSelected(item);
+        switch (item.getItemId()) {
+            case R.id.menu_save_user:
+                Intent intent = new Intent(LoginActivity.this, CreateUserActivity.class);
+                startActivity(intent);
+                break;
+        }
+        return true;
     }
 }
 

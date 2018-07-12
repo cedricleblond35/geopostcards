@@ -32,15 +32,19 @@ public class UserDAO implements BaseDAO<User>{
     /* ##### SELECT ##### */
 
     public User selectOneById(Integer objectId) {
-        User user = new User();
+        User user = null;
         String whereClause = "id = ?";
         String[] whereArgs = new String[] {
                 String.valueOf(objectId)
         };
         try(SQLiteDatabase db = helper.getReadableDatabase()) {
             Cursor cursor = db.query(TABLE_NAME, null, whereClause, whereArgs, null, null, null);
-            while(cursor.moveToNext()) {
-                user = map(cursor);
+            if(cursor.getCount() > 0)
+            {
+                user = new User();
+                while(cursor.moveToNext()) {
+                    user = map(cursor);
+                }
             }
         }
         return user;
@@ -81,7 +85,6 @@ public class UserDAO implements BaseDAO<User>{
         Long res;
         try(SQLiteDatabase db = helper.getWritableDatabase()) {
             ContentValues values = new ContentValues();
-            values.put(COL_ID, object.getId());
             values.put(COL_USERNAME, object.getUsername());
             values.put(COL_TOKEN, object.getToken_id());
             values.put(COL_EMAIL, object.getEmail());

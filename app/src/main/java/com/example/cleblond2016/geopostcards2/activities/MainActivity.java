@@ -40,7 +40,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
     //géolocalisation
     LocationManager lm;
     public static final int REQUEST_CODE = 1234;
-    public static final Integer DEFAULT_ID_USER = null;
+    public static final int DEFAULT_ID_USER = 0;
     public static final String EXTRA_ID_USER = "idUser";
     private double latitudeUser;
     private double longitudeUser;
@@ -74,8 +74,10 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        idUser = getIntent().getIntExtra(EXTRA_ID_USER, DEFAULT_ID_USER);
+        Intent intentRecu = getIntent();
+        idUser = intentRecu.getIntExtra(EXTRA_ID_USER, DEFAULT_ID_USER);
 
+        Log.i(TAG, "----------------------------------- idUser : "+idUser);
         //Bouton rose
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
