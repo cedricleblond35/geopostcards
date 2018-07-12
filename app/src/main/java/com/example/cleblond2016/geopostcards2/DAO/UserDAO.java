@@ -46,6 +46,21 @@ public class UserDAO implements BaseDAO<User>{
         return user;
     }
 
+    public User selectOneByEmail(String email) {
+        User user = new User();
+        String whereClause = "email = ?";
+        String[] whereArgs = new String[] {
+                String.valueOf(email)
+        };
+        try(SQLiteDatabase db = helper.getReadableDatabase()) {
+            Cursor cursor = db.query(TABLE_NAME, null, whereClause, whereArgs, null, null, null);
+            while(cursor.moveToNext()) {
+                user = map(cursor);
+            }
+        }
+        return user;
+    }
+
     @Override
     public List<User> selectAll() {
         List<User> listUsers = new ArrayList<>();

@@ -29,9 +29,9 @@ public class PostCardService {
 
     public PostCard getPostCardById(Context context, String id){
         PostCardDAO dao = new PostCardDAO(context);
-        PostCard p = new PostCard(48.0406841,-1.6841663,"Rando", "message perso");
-        return p;
-        //return dao.selectOneById(id);
+        //PostCard p = new PostCard(48.0406841,-1.6841663,"Rando", "message perso");
+        //return p;
+        return dao.selectOneById(id);
     }
 
     /**

@@ -9,7 +9,6 @@ public abstract class PostCardContract {
     public static final String COL_LONGITUDE = "longitude";
     public static final String COL_TITLE = "title";
     public static final String COL_USER = "user";
-    public static final String COL_FK_USER_NAME = "fk_user";
     public static final String COL_MESSAGE = "message";
 
     public static final String CREATE_TABLE =
@@ -20,7 +19,7 @@ public abstract class PostCardContract {
                     + COL_TITLE + " TEXT NOT NULL,"
                     + COL_USER + " INTEGER NOT NULL,"
                     + COL_MESSAGE + " TEXT NULL," +
-                    " FOREIGN KEY (" + COL_FK_USER_NAME + ") REFERENCES " + UserContract.TABLE_NAME + "(" + UserContract.COL_ID + "))";
+                    " FOREIGN KEY (" + COL_USER + ") REFERENCES " + UserContract.TABLE_NAME + "(" + UserContract.COL_ID + "))";
 
     public static final String DROP_TABLE = "DROP TABLE IF EXISTS " + TABLE_NAME;
 }
