@@ -15,6 +15,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Toolbar;
 
 import com.example.cleblond2016.geopostcards2.BO.Media;
 import com.example.cleblond2016.geopostcards2.BO.PostCard;
@@ -139,6 +140,7 @@ public class CreatePostCardActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.menu_save_save:
                 savePostCard();
+                finish();
                 break;
         }
         return true;
@@ -235,6 +237,7 @@ public class CreatePostCardActivity extends AppCompatActivity {
         String id = uuid.toString();
         String titre = edtTitle.getText().toString();
         String message = edtMessage.getText().toString();
+        Log.e("latitude", "Latitude : "+edtLatitude.getText().toString());
         Double latitude = Double.valueOf(edtLatitude.getText().toString());
         Double longitude = Double.valueOf(edtLongitude.getText().toString());
         PostCard postCard = null;

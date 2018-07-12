@@ -50,7 +50,7 @@
         app:layout_constraintRight_toRightOf="parent"
         />
 
-    <!-- ##### MEDIA ##### -->
+    <!-- ##### IMAGE ##### -->
 
     <TextView
         android:id="@+id/detail_post_card_lbl_media"
@@ -70,24 +70,6 @@
         android:src="@mipmap/ic_launcher"
         app:layout_constraintTop_toBottomOf="@+id/detail_post_card_message"
         app:layout_constraintLeft_toRightOf="@+id/detail_post_card_lbl_media"
-        />
-
-    <Button
-        android:id="@+id/detail_post_card_btn_son"
-        android:layout_width="wrap_content"
-        android:layout_height="40dp"
-        android:text="@string/son"
-        app:layout_constraintTop_toBottomOf="@+id/detail_post_card_message"
-        app:layout_constraintLeft_toRightOf="@+id/detail_post_card_image_view"
-        />
-
-    <Button
-        android:id="@+id/detail_post_card_btn_video"
-        android:layout_width="wrap_content"
-        android:layout_height="40dp"
-        android:text="@string/video"
-        app:layout_constraintTop_toBottomOf="@+id/detail_post_card_message"
-        app:layout_constraintLeft_toRightOf="@+id/detail_post_card_btn_son"
         />
 
     <!-- ##### DESCRIPTION IMAGE ##### -->

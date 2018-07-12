@@ -71,6 +71,7 @@ public class PostCardDAO implements BaseDAO<PostCard> {
             values.put(COL_LONGITUDE, object.getLongitude());
             values.put(COL_TITLE, object.getTitle());
             values.put(COL_MESSAGE, object.getMessage());
+            values.put(COL_USER, object.getUser().getId());
 
             res = db.insert(TABLE_NAME, null, values);
 
