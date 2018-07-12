@@ -7,6 +7,7 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.location.LocationProvider;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
@@ -55,12 +56,13 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
 
     //cards
     private List<PostCard> carts;
-    private List<Marker> markers;
     private PostCardService p;
+    private Location location = null;
+    private Polyline lineCircle;
 
 
     // The minimum distance to change Updates in meters
-    private static final long MIN_DISTANCE_CHANGE_FOR_UPDATES = 3; // 3 meters
+    private static final long MIN_DISTANCE_CHANGE_FOR_UPDATES = 1; // 1 meters
 
     // The minimum time between updates in milliseconds
     private static final long MIN_TIME_BW_UPDATES = 1000 * 60 * 1; // 1 minute
@@ -71,13 +73,15 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        //barre de menu
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        //intent
         Intent intentRecu = getIntent();
         idUser = intentRecu.getIntExtra(EXTRA_ID_USER, DEFAULT_ID_USER);
-
         Log.i(TAG, "----------------------------------- idUser : "+idUser);
+
         //Bouton rose
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -101,10 +105,13 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
     }
 
     @Override
-    protected void onPause() {
-        super.onPause();
-        lm.removeUpdates(this);
+    protected void onStart() {
+        super.onStart();
+    }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
         userPoint.setLatitude(latitudeUser);
         userPoint.setLongitude(longitudeUser);
         mapController.setCenter(userPoint);
@@ -113,7 +120,27 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
         //Chargement des carte postal
         p = PostCardService.getInstance();
         carts = p.selectAllPostCardswhithLimit(this, latitudeUser, longitudeUser, 1.00);
-        
+        if(this.location != null) printCarts(this.location);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        lm.removeUpdates(this);
+
+
+
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
     }
 
     /***************************
@@ -159,19 +186,24 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
     @Override
     public void onLocationChanged(Location location) {
        printCarts(location);
+       this.location = location;
 
+       //supprimer le cercle existant
+       if(lineCircle != null)
+           map.getOverlayManager().remove(lineCircle);
+
+        //ajout des points du nouveau cercle
         List<GeoPoint> geoPoints = getGeodeticPoints();
-//add your points here
-        Polyline line = new Polyline();   //see note below!
-        line.setPoints(geoPoints);
-        line.setOnClickListener(new Polyline.OnClickListener() {
+        lineCircle = new Polyline();   //see note below!
+        lineCircle.setPoints(geoPoints);
+        lineCircle.setOnClickListener(new Polyline.OnClickListener() {
             @Override
             public boolean onClick(Polyline polyline, MapView mapView, GeoPoint eventPos) {
                 Toast.makeText(mapView.getContext(), "polyline with " + polyline.getPoints().size() + "pts was tapped", Toast.LENGTH_LONG).show();
                 return false;
             }
         });
-        map.getOverlayManager().add(line);
+        map.getOverlayManager().add(lineCircle);
 
     }
 
@@ -271,11 +303,6 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
                 }
             });
 
-
-
-
-
-
             map.getOverlays().add(markerCart);
         }
     }
@@ -340,20 +367,14 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
 
 
 
-
-
-
-
-
-
-
-
-
-
         }
     }
 
 
+    /**
+     * Localisation des points du cercle
+     * @return List<GeoPoint>
+     */
     public List<GeoPoint> getGeodeticPoints() {
         final double radius = 1000;
         ArrayList<GeoPoint> circlePoints = new ArrayList<GeoPoint>();
@@ -363,4 +384,5 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
         return circlePoints;
 
     }
+
 }
