@@ -15,6 +15,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Toast;
 import android.widget.Toolbar;
 
 import com.example.cleblond2016.geopostcards2.BO.Media;
@@ -84,6 +85,10 @@ public class CreatePostCardActivity extends AppCompatActivity {
             double defaultValue = 0.00;
             actualLatitude = intentRecu.getDoubleExtra(EXTRA_LATITUDE, defaultValue);
             actualLongitude = intentRecu.getDoubleExtra(EXTRA_LONGITUDE, defaultValue);
+            if(actualLatitude == 0.00 || actualLongitude == 0.00){
+                Toast.makeText(this, "Récupération latitude et longitude a échouée. Réessayez plus tard.", Toast.LENGTH_LONG).show();
+                finish();
+            }
             idUser = intentRecu.getIntExtra(MainActivity.EXTRA_ID_USER, MainActivity.DEFAULT_ID_USER);
             Log.i(TAG, "actualLatitude :" + actualLatitude);
             Log.i(TAG, "actualLongitude :" + actualLongitude);
@@ -140,6 +145,7 @@ public class CreatePostCardActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.menu_save_save:
                 savePostCard();
+                Toast.makeText(this, "Création PostCard OK", Toast.LENGTH_LONG).show();
                 finish();
                 break;
         }
