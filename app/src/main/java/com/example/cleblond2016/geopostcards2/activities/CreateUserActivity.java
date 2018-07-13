@@ -193,7 +193,7 @@ public class CreateUserActivity extends AppCompatActivity {
                 return false;
             }
 
-            String token_id =  random() ;
+            String token_id =  "12345" ;
             user = new User(mUsername, token_id, mEmail, mPassword);
             return UserService.getInstance().insertUser(CreateUserActivity.this, user);
 
