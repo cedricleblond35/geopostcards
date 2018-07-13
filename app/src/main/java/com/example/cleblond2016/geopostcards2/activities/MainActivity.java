@@ -25,8 +25,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.example.cleblond2016.geopostcards2.BO.Media;
 import com.example.cleblond2016.geopostcards2.BO.PostCard;
 import com.example.cleblond2016.geopostcards2.R;
+import com.example.cleblond2016.geopostcards2.services.MediaService;
 import com.example.cleblond2016.geopostcards2.services.PostCardService;
 import org.osmdroid.api.IMapController;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
@@ -65,8 +67,14 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
     private Location location = null;
     private Polyline lineCircle;
 
-
-
+    public static final String EXTRA_POSTCARD_TITLE = "Title";
+    public static final String EXTRA_POSTCARD_MESSAGE = "Message";
+    public static final String EXTRA_POSTCARD_DESCRIPTION_IMAGE = "DescriptionImage";
+    public static final String EXTRA_POSTCARD_DESCRIPTION_SON = "DescriptionSon";
+    public static final String EXTRA_POSTCARD_DESCRIPTION_VIDEO = "DescriptionVideo";
+    public static final String EXTRA_POSTCARD_URL_IMAGE = "UrlImage";
+    public static final String EXTRA_POSTCARD_URL_SON = "UrlSon";
+    public static final String EXTRA_POSTCARD_URL_VIDEO = "UrlVideo";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -120,7 +128,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
 
         //Chargement des carte postal
         p = PostCardService.getInstance();
-        carts = p.selectAllPostCardswhithLimit(this, latitudeUser, longitudeUser, 1.00);
+        carts = p.selectAllPostCardsWithLimit(this, latitudeUser, longitudeUser, 1.00);
         if(this.location != null) printCarts(this.location);
 
 
@@ -269,7 +277,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
         latitudeUser = location.getLatitude();
         longitudeUser = location.getLongitude();
 
-        carts = p.selectAllPostCardswhithLimit(this, latitudeUser, longitudeUser, 1.00);
+        carts = p.selectAllPostCardsWithLimit(this, latitudeUser, longitudeUser, 1.00);
 
         Log.i(TAG, "latitude: " + latitudeUser + " long : " + longitudeUser );
 
@@ -283,7 +291,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
         map.getOverlays().add(startMarker);
 
         //Afficher l'ensemble des cartes
-        for(PostCard postCard : carts)
+        for(final PostCard postCard : carts)
         {
             GeoPoint pointCart = new GeoPoint(postCard.getLatitude(), postCard.getLongitude());
 
@@ -299,6 +307,17 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
                     Intent intent = new Intent(MainActivity.this, DetailPostCardActivity.class);
                     intent.putExtra(CreatePostCardActivity.EXTRA_LATITUDE, latitudeUser);
                     intent.putExtra(CreatePostCardActivity.EXTRA_LONGITUDE, longitudeUser);
+                    intent.putExtra(EXTRA_POSTCARD_TITLE, postCard.getTitle());
+                    intent.putExtra(EXTRA_POSTCARD_MESSAGE, postCard.getTitle());
+                    intent.putExtra(EXTRA_POSTCARD_DESCRIPTION_IMAGE, postCard.getTitle());
+                    intent.putExtra(EXTRA_POSTCARD_DESCRIPTION_SON, postCard.getTitle());
+                    intent.putExtra(EXTRA_POSTCARD_DESCRIPTION_VIDEO, postCard.getTitle());
+                    String urlImage = MediaService.getInstance().getMediaById(MainActivity.this, postCard.getId(), "Image").getUrl();
+                    intent.putExtra(EXTRA_POSTCARD_URL_IMAGE, urlImage);
+                    String urlSon = MediaService.getInstance().getMediaById(MainActivity.this, postCard.getId(), "Son").getUrl();
+                    intent.putExtra(EXTRA_POSTCARD_URL_IMAGE, urlSon);
+                    String urlVideo = MediaService.getInstance().getMediaById(MainActivity.this, postCard.getId(), "Video").getUrl();
+                    intent.putExtra(EXTRA_POSTCARD_URL_IMAGE, urlVideo);
                     startActivity(intent);
 
                     return false;
