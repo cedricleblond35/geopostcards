@@ -50,8 +50,8 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
     public static final int REQUEST_CODE = 1234;
     public static final int DEFAULT_ID_USER = 0;
     public static final String EXTRA_ID_USER = "idUser";
-    private double latitudeUser;
-    private double longitudeUser;
+    private double latitudeUser = 0.00;
+    private double longitudeUser = 0.00;
     private int idUser;
 
     //carte
@@ -132,6 +132,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
         if(this.location != null) printCarts(this.location);
 
 
+
     }
 
     @Override
@@ -197,6 +198,9 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
     public void onLocationChanged(Location location) {
        printCarts(location);
        this.location = location;
+        userPoint.setLatitude(latitudeUser);
+        userPoint.setLongitude(longitudeUser);
+        mapController.setCenter(userPoint);
 
        //supprimer le cercle existant
        if(lineCircle != null)
@@ -206,13 +210,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
         List<GeoPoint> geoPoints = getGeodeticPoints();
         lineCircle = new Polyline();   //see note below!
         lineCircle.setPoints(geoPoints);
-        lineCircle.setOnClickListener(new Polyline.OnClickListener() {
-            @Override
-            public boolean onClick(Polyline polyline, MapView mapView, GeoPoint eventPos) {
-                Toast.makeText(mapView.getContext(), "polyline with " + polyline.getPoints().size() + "pts was tapped", Toast.LENGTH_LONG).show();
-                return false;
-            }
-        });
+
         map.getOverlayManager().add(lineCircle);
 
     }
@@ -353,7 +351,10 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
         lm = (LocationManager) this.getSystemService(LOCATION_SERVICE);
 
         if ( ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
-                        ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED)
+                ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_NETWORK_STATE) != PackageManager.PERMISSION_GRANTED &&
+        ActivityCompat.checkSelfPermission(this, Manifest.permission.INTERNET) != PackageManager.PERMISSION_GRANTED
+                )
         {
             return;
         } else {
