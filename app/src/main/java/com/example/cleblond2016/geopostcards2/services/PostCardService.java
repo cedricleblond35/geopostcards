@@ -80,7 +80,7 @@ public class PostCardService {
      * @param longitude
      * @return List<PostCard>
      */
-    public List<PostCard> selectAllPostCardswhithLimit(Context context, double latitude, double longitude, double limit) {
+    public List<PostCard> selectAllPostCardsWithLimit(Context context, double latitude, double longitude, double limit) {
         List<PostCard> postCards = new ArrayList<>();
         List<PostCard> postCardsAll = getAllPostCards(context);
         for(PostCard postCard : postCardsAll)
